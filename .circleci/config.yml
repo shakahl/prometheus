@@ -3,7 +3,7 @@ version: 2.1
 
 orbs:
   prometheus: prometheus/prometheus@0.11.0
-  go: circleci/go@0.2.0
+  go: circleci/go@1.7.0
   win: circleci/windows@2.3.0
 
 executors:
@@ -11,10 +11,10 @@ executors:
   # should also be updated.
   golang:
     docker:
-      - image: circleci/golang:1.16-node
+      - image: quay.io/prometheus/golang-builder:1.17-base
   golang_115:
     docker:
-      - image: circleci/golang:1.15-node
+      - image: quay.io/prometheus/golang-builder:1.15-base
 
 jobs:
   test_go:
@@ -24,8 +24,8 @@ jobs:
       - prometheus/setup_environment
       - go/load-cache:
           key: v1
-      - run:
-          command: sudo apt-get install -y yamllint
+      - run: apt-get update
+      - run: apt-get install -y yamllint
       - run:
           command: make GO_ONLY=1
           environment:
@@ -116,8 +116,8 @@ jobs:
       - run:
           command: jb install
           working_directory: ~/project/documentation/prometheus-mixin
-      - run:
-          command: sudo apt-get install -y yamllint
+      - run: apt-get update
+      - run: apt-get install -y yamllint
       - run:
           command: make
           working_directory: ~/project/documentation/prometheus-mixin
